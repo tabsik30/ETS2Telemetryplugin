@@ -1,6 +1,6 @@
 Hi its my frist coding project so bugs are expected
 
-WHAT IT IS AND WHAT DOES IT DO
+WHAT IT IS AND WHAT IT DOES
 
 its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of light,bliners,parking brake, in configure you can change betwen KM/h and Mph
 
@@ -33,3 +33,6 @@ a list of labels and a description of what each label does
 to to change the conversion between Km/h and Mph go to the plugin configuration
 
 when evry thing is done just start ETS2/ATS telemetry server and then start ETS2
+
+remeber its sitll work in proogres im planning add more features
+
