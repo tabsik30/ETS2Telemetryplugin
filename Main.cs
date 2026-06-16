@@ -18,6 +18,7 @@ namespace tabsik12.Ets2TelemetryPlugin
         private readonly HttpClient _httpClient = new HttpClient();
         private Timer _updateTimer;
 
+        // Ścieżka do naszego własnego pliku konfiguracyjnego
         private string ConfigFilePath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "Macro Deck", "plugins", "tabsik12.Ets2TelemetryPlugin", "Ets2Telemetry.config.json");
@@ -62,7 +63,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 }
                 else
                 {
-                    UseMph = false;
+                    UseMph = false; // domyślnie km/h
                 }
             }
             catch
@@ -105,8 +106,9 @@ namespace tabsik12.Ets2TelemetryPlugin
                 var truck = telemetry["truck"];
                 var navigation = telemetry["navigation"];
 
+                // 1. Prędkość – wartość bezwzględna, km/h lub mph
                 double speedRaw = truck?["speed"]?.ToObject<double?>() ?? 0.0;
-                double speedAbsKm = Math.Abs(speedRaw);
+                double speedAbsKm = Math.Abs(speedRaw); // zakładamy km/h z telemetrii
 
                 double speedDisplay = speedAbsKm;
                 if (UseMph)
@@ -117,6 +119,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 int speedRounded = (int)Math.Round(speedDisplay);
                 string speedText = speedRounded.ToString();
 
+                // 2. Ograniczenie prędkości – te same jednostki co prędkość
                 double speedLimitValKm = navigation?["speedLimit"]?.ToObject<double?>() ?? 0.0;
                 double speedLimitDisplay = speedLimitValKm;
                 if (UseMph)
@@ -126,9 +129,11 @@ namespace tabsik12.Ets2TelemetryPlugin
                 int speedLimitRounded = (int)Math.Round(speedLimitDisplay);
                 string speedLimitText = speedLimitRounded.ToString();
 
+                // 2a. Tempomat – stan i ustawiona prędkość (w tych samych jednostkach co prędkość) [web:135][web:87]
                 bool cruiseOnRaw = truck?["cruiseControlOn"]?.ToObject<bool?>() ?? false;
-                double cruiseSpeedValKm = truck?["cruiseControlSpeed"]?.ToObject<double?>() ?? 0.0;
+                double cruiseSpeedValKm = truck?["cruiseControlSpeed"]?.ToObject<double?>() ?? 0.0; // km/h z telemetrii
 
+                // Jeśli CC jest wyłączony lub wartość bez sensu, nie pokazujemy jej
                 if (!cruiseOnRaw || cruiseSpeedValKm <= 0.1)
                 {
                     cruiseSpeedValKm = 0.0;
@@ -143,6 +148,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 int cruiseSpeedRounded = (int)Math.Round(cruiseSpeedDisplay);
                 string cruiseSpeedText = cruiseSpeedRounded > 0 ? cruiseSpeedRounded.ToString() : string.Empty;
 
+                // 3. Paliwo – fuelPercentage lub fuel/fuelCapacity
                 double fuelPct = 0.0;
 
                 if (truck?["fuelPercentage"] != null)
@@ -150,6 +156,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                     var rawFuel = truck["fuelPercentage"].ToObject<double?>();
                     if (rawFuel.HasValue)
                     {
+                        // w niektórych wersjach jest już 0–100, w innych 0–1
                         fuelPct = rawFuel.Value > 1.5 ? rawFuel.Value : rawFuel.Value * 100.0;
                     }
                 }
@@ -166,6 +173,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 int fuelRounded = (int)Math.Round(fuelPct);
                 string fuelText = fuelRounded.ToString();
 
+                // 4. Bieg – <0 = R, 0 = N, >0 = 1,2,3...
                 int gearRaw = truck?["gear"]?.ToObject<int?>() ?? 0;
                 string gearText;
 
@@ -182,10 +190,12 @@ namespace tabsik12.Ets2TelemetryPlugin
                     gearText = gearRaw.ToString();
                 }
 
+                // 5. Światła (dane z Funbit: lightsParkingOn, lightsBeamLowOn, lightsBeamHighOn) [web:64][web:135]
                 bool parkingOn = truck?["lightsParkingOn"]?.ToObject<bool?>() ?? false;
-                bool lowOn = truck?["lightsBeamLowOn"]?.ToObject<bool?>() ?? false;
-                bool highOn = truck?["lightsBeamHighOn"]?.ToObject<bool?>() ?? false;
+                bool lowOn     = truck?["lightsBeamLowOn"]?.ToObject<bool?>() ?? false;
+                bool highOn    = truck?["lightsBeamHighOn"]?.ToObject<bool?>() ?? false;
 
+                // Zbiorczy opis tekstowy (jak wcześniej)
                 string lightsText;
                 if (highOn)
                 {
@@ -204,17 +214,19 @@ namespace tabsik12.Ets2TelemetryPlugin
                     lightsText = "OFF";
                 }
 
+                // Osobne boole do kafelków:
                 bool lightsParkingVar = parkingOn;
-                bool lightsLowVar = lowOn;
-                bool lightsHighVar = highOn;
+                bool lightsLowVar     = lowOn;
+                bool lightsHighVar    = highOn;
 
-                bool blinkerLeftOn = truck?["blinkerLeftOn"]?.ToObject<bool?>() ?? false;
+                // 6. Kierunkowskazy
+                bool blinkerLeftOn  = truck?["blinkerLeftOn"]?.ToObject<bool?>() ?? false;
                 bool blinkerRightOn = truck?["blinkerRightOn"]?.ToObject<bool?>() ?? false;
 
                 string blinkerText;
                 if (blinkerLeftOn && blinkerRightOn)
                 {
-                    blinkerText = "HAZARD";
+                    blinkerText = "HAZARD"; // awaryjne
                 }
                 else if (blinkerLeftOn)
                 {
@@ -229,33 +241,42 @@ namespace tabsik12.Ets2TelemetryPlugin
                     blinkerText = "OFF";
                 }
 
-                bool blinkerLeftVar = blinkerLeftOn && !blinkerRightOn;
-                bool blinkerRightVar = blinkerRightOn && !blinkerLeftOn;
+                bool blinkerLeftVar   = blinkerLeftOn && !blinkerRightOn;
+                bool blinkerRightVar  = blinkerRightOn && !blinkerLeftOn;
                 bool blinkerHazardVar = blinkerLeftOn && blinkerRightOn;
 
+                // 7. Hamulec ręczny
                 bool parkBrakeOn = truck?["parkBrakeOn"]?.ToObject<bool?>() ?? false;
                 string parkBrakeText = parkBrakeOn ? "ON" : "OFF";
 
-                VariableManager.SetValue("ets2_speed", speedText, VariableType.String, this);
-                VariableManager.SetValue("ets2_speed_limit", speedLimitText, VariableType.String, this);
+                // Ustawianie zmiennych Macro Deck
 
-                VariableManager.SetValue("ets2_cruise_on", cruiseOnRaw, VariableType.Bool, this);
-                VariableManager.SetValue("ets2_cruise_speed", cruiseSpeedText, VariableType.String, this);
+                // Prędkość i limit
+                VariableManager.SetValue("ets2_speed", speedText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_speed_limit", speedLimitText, VariableType.String, this, false);
 
-                VariableManager.SetValue("ets2_fuel_percentage", fuelText, VariableType.String, this);
-                VariableManager.SetValue("ets2_gear", gearText, VariableType.String, this);
+                // Tempomat
+                VariableManager.SetValue("ets2_cruise_on", cruiseOnRaw, VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_cruise_speed", cruiseSpeedText, VariableType.String, this, false);
 
-                VariableManager.SetValue("ets2_lights", lightsText, VariableType.String, this);
-                VariableManager.SetValue("ets2_lights_parking", lightsParkingVar, VariableType.Bool, this);
-                VariableManager.SetValue("ets2_lights_low", lowOn, VariableType.Bool, this);
-                VariableManager.SetValue("ets2_lights_high", highOn, VariableType.Bool, this);
+                // Paliwo i bieg
+                VariableManager.SetValue("ets2_fuel_percentage", fuelText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_gear", gearText, VariableType.String, this, false);
 
-                VariableManager.SetValue("ets2_blinker", blinkerText, VariableType.String, this);
-                VariableManager.SetValue("ets2_blinker_left", blinkerLeftVar, VariableType.Bool, this);
-                VariableManager.SetValue("ets2_blinker_right", blinkerRightVar, VariableType.Bool, this);
-                VariableManager.SetValue("ets2_blinker_hazard", blinkerHazardVar, VariableType.Bool, this);
+                // Światła: zbiorcza oraz trzy osobne
+                VariableManager.SetValue("ets2_lights", lightsText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_lights_parking", lightsParkingVar, VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_lights_low",     lightsLowVar,     VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_lights_high",    lightsHighVar,    VariableType.Bool, this, false);
 
-                VariableManager.SetValue("ets2_park_brake", parkBrakeText, VariableType.String, this);
+                // Kierunkowskazy: zbiorcza + trzy osobne
+                VariableManager.SetValue("ets2_blinker", blinkerText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_blinker_left",   blinkerLeftVar,   VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_blinker_right",  blinkerRightVar,  VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_blinker_hazard", blinkerHazardVar, VariableType.Bool, this, false);
+
+                // Hamulec ręczny
+                VariableManager.SetValue("ets2_park_brake", parkBrakeText, VariableType.String, this, false);
             }
             catch (Exception ex)
             {
@@ -264,6 +285,7 @@ namespace tabsik12.Ets2TelemetryPlugin
         }
     }
 
+    // Prosta klasa na potrzeby JSON konfiguracji
     public class PluginConfig
     {
         public bool UseMph { get; set; }
