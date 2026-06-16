@@ -1,6 +1,6 @@
 Hi its my frist coding project so bugs are expected 
 
-WHAT IT IS AND WHAT DOES IT DO
+WHAT IT IS AND WHAT IT DOES
 
 its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of light,blinkers,parking brake,
 in configure you can change betwen KM/h and Mph 
