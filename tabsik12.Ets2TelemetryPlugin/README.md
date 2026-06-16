@@ -31,7 +31,10 @@ a list of labels and a description of what each label does
 
 {ets2_lights} it shows lights status PARK LOW HIGH OFF
 
-{ets2_blinker} it shows blinkers status LEFT RIGHT HAZARD 
+{ets2_blinker} it shows blinkers status LEFT RIGHT HAZARD on one button or you can make each on separate button 
+{ets2_blinker_left} for left blinker 
+{ets2_blinker_right} for right blinker
+{ets2_blinker_hazard} for hazard lights
 
 to to change the conversion between Km/h and Mph go to the plugin configuration
 
