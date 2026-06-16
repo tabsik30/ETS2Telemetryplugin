@@ -5,7 +5,7 @@
   "packageId": "Ets2TelemetryPlugin",
   "version": "1.0.7",
   "target-plugin-api-version": 40,
-  "target-macro-deck-version" : "2.14.1",
+  "target-macro-deck-version" : "2.15.0-b6",
   "repository" : "https://github.com/tabsik30/ET2Telemetryplugin",
   "dll": "Ets2TelemetryPlugin.dll",
   "author-discord-userid": 900012635695747112
