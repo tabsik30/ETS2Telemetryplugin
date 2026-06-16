@@ -10,7 +10,8 @@ HOW TO CONFIGURE MY PLUGIN
 
 1.install Macro Deck 2
 
-2.install my plugin Ets2Telemetry
+2.install my plugin Ets2Telemetry if its not avalible in Extension strore yet just download manualy and put in C:\Users\"your user name"\AppData\Roaming\Macro Deck\plugins
+
 
 3.install ETS 2
 
