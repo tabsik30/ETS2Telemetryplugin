@@ -39,7 +39,9 @@ a list of labels and a description of what each label does
 {ets2_blinker_right} for right blinker
 {ets2_blinker_hazard} for hazard blinkers 
 
-to to change the conversion between Km/h and Mph go to the plugin configuration
+{ets2_cruise_on} shows status of cruise controll
+{ets2_cruise_speed} shows speed set on cruise controll
+
 
 when evry thing is done just start ETS2/ATS telemetry server and then start ETS2 
 
