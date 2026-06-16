@@ -252,31 +252,31 @@ namespace tabsik12.Ets2TelemetryPlugin
                 // Ustawianie zmiennych Macro Deck
 
                 // Prędkość i limit
-                VariableManager.SetValue("ets2_speed", speedText, VariableType.String, this, false);
-                VariableManager.SetValue("ets2_speed_limit", speedLimitText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_speed", speedText, VariableType.String, this, null);
+                VariableManager.SetValue("ets2_speed_limit", speedLimitText, VariableType.String, this, null);
 
                 // Tempomat
-                VariableManager.SetValue("ets2_cruise_on", cruiseOnRaw, VariableType.Bool, this, false);
-                VariableManager.SetValue("ets2_cruise_speed", cruiseSpeedText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_cruise_on", cruiseOnRaw, VariableType.Bool, this, null);
+                VariableManager.SetValue("ets2_cruise_speed", cruiseSpeedText, VariableType.String, this, null);
 
                 // Paliwo i bieg
-                VariableManager.SetValue("ets2_fuel_percentage", fuelText, VariableType.String, this, false);
-                VariableManager.SetValue("ets2_gear", gearText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_fuel_percentage", fuelText, VariableType.String, this, null);
+                VariableManager.SetValue("ets2_gear", gearText, VariableType.String, this, null);
 
                 // Światła: zbiorcza oraz trzy osobne
-                VariableManager.SetValue("ets2_lights", lightsText, VariableType.String, this, false);
-                VariableManager.SetValue("ets2_lights_parking", lightsParkingVar, VariableType.Bool, this, false);
-                VariableManager.SetValue("ets2_lights_low",     lightsLowVar,     VariableType.Bool, this, false);
-                VariableManager.SetValue("ets2_lights_high",    lightsHighVar,    VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_lights", lightsText, VariableType.String, this, null);
+                VariableManager.SetValue("ets2_lights_parking", lightsParkingVar, VariableType.Bool, this, null);
+                VariableManager.SetValue("ets2_lights_low",     lightsLowVar,     VariableType.Bool, this, null);
+                VariableManager.SetValue("ets2_lights_high",    lightsHighVar,    VariableType.Bool, this, null);
 
                 // Kierunkowskazy: zbiorcza + trzy osobne
-                VariableManager.SetValue("ets2_blinker", blinkerText, VariableType.String, this, false);
-                VariableManager.SetValue("ets2_blinker_left",   blinkerLeftVar,   VariableType.Bool, this, false);
-                VariableManager.SetValue("ets2_blinker_right",  blinkerRightVar,  VariableType.Bool, this, false);
-                VariableManager.SetValue("ets2_blinker_hazard", blinkerHazardVar, VariableType.Bool, this, false);
+                VariableManager.SetValue("ets2_blinker", blinkerText, VariableType.String, this, null);
+                VariableManager.SetValue("ets2_blinker_left",   blinkerLeftVar,   VariableType.Bool, this, null);
+                VariableManager.SetValue("ets2_blinker_right",  blinkerRightVar,  VariableType.Bool, this, null);
+                VariableManager.SetValue("ets2_blinker_hazard", blinkerHazardVar, VariableType.Bool, this, null);
 
                 // Hamulec ręczny
-                VariableManager.SetValue("ets2_park_brake", parkBrakeText, VariableType.String, this, false);
+                VariableManager.SetValue("ets2_park_brake", parkBrakeText, VariableType.String, this, null);
             }
             catch (Exception ex)
             {
