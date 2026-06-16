@@ -2,7 +2,7 @@ Hi its my frist coding project so bugs are expected
 
 WHAT IT IS AND WHAT DOES IT DO
 
-its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of light,bliners,parking brake,
+its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of light,blinkers,parking brake,
 in configure you can change betwen KM/h and Mph 
 
 HOW TO CONFIGURE MY PLUGIN
@@ -16,7 +16,7 @@ HOW TO CONFIGURE MY PLUGIN
 4.install ETS2/ATS telemertry server https://github.com/Funbit/ets2-telemetry-server
 
 Now let's create buttons
-all you need to do in macro deck is enter the appropriate line as button label "Label" 
+all you need to do in macro deck is enter the appropriate line as button label "Label" or use "on event" and use icons to shows on and of status
 you can edit them as you wish for e.g you can use icons insted of labels and use "on Event" to change state of them 
 
 a list of labels and a description of what each label does
