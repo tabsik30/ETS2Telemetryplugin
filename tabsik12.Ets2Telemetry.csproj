@@ -4,8 +4,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>tabsik12.Ets2TelemetryPlugin</RootNamespace>
     <AssemblyName>Ets2TelemetryPlugin</AssemblyName>
-    <UseWindowsForms>true</UseWindowsForms>
-  </PropertyGroup>
+    <UseWindowsForms>true</UseWindowsForms
+    <Version>1.0.6</Version>
+</PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Macro Deck 2">
