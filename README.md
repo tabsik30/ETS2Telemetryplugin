@@ -2,7 +2,7 @@ Hi its my frist coding project so bugs are expected
 
 WHAT IT IS AND WHAT DOES IT DO
 
-its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of lights,blinkers,parking brake,staus and speed oof cruise controll 
+its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel percentage , status of lights,blinkers,parking brake,staus and speed of cruise controll 
 
 in configure you can change units betwen KM/h and Mph 
 
