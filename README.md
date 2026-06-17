@@ -17,7 +17,7 @@ HOW TO CONFIGURE MY PLUGIN
 
 Now let's create buttons
 all you need to do in macro deck is enter the appropriate line as button label "Label" 
-you can edit them as you wish
+you can edit them as you wish instead of using labels you can use "on event" and then set some nice icons to show status 
 
 a list of labels and a description of what each label does
 
@@ -25,14 +25,24 @@ a list of labels and a description of what each label does
 
 {ets2_speed_limit} it shows your actual speed limit as abowe you can add Km/h or MPh at end and "limit" 
 
+{ets2_cruise_on shows status of cruise controll
+{ets2_cruise_speed} shows speed set for cruise controll
+
 {ets2_gear} it shows your actual gear R N 1 2 3 etc  you can write "Gear" under it to now what it shows 
 
 {ets2_park_brake} it shows your parking brake status ON/OFF
 
-{ets2_lights} it shows lights status PARK LOW HIGH OFF
+{ets2_lights} it shows lights status PARK LOW HIGH OFF or you can set them as 3 separate button
+{ets2_lights_high} for high ligits
+{ets2_lights_low}  for low loight
+{ets2_lights_parking} for parking lights
 
-{ets2_blinker} it shows blinkers status LEFT RIGHT HAZARD 
 
+{ets2_blinker} it shows blinkers status LEFT RIGHT HAZARD or you can set them as 3 separate button
+{ets2_blinker_left} for left blinker
+{ets2_blinker_right} for right blinker
+{ets2_blinker_hazard} for hazard lights 
+ 
 to to change the conversion between Km/h and Mph go to the plugin configuration
 
 when evry thing is done just start ETS2/ATS telemetry server and then start ETS2 
