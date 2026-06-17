@@ -21,7 +21,7 @@ namespace tabsik12.Ets2TelemetryPlugin
         // Ścieżka do naszego własnego pliku konfiguracyjnego
         private string ConfigFilePath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "Macro Deck", "plugins", "tabsik12.Ets2TelemetryPlugin", "Ets2Telemetry.config.json");
+                "Macro Deck", "plugins", "Ets2TelemetryPlugin", "Ets2Telemetry.config.json");
 
         public bool UseMph { get; private set; }
 
