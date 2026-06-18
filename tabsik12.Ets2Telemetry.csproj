@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows-windows10.0.22000</TargetFramework>
+    <TargetFramework>net8.0-windows-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <RootNamespace>tabsik12.Ets2TelemetryPlugin</RootNamespace>
     <AssemblyName>Ets2TelemetryPlugin</AssemblyName>
