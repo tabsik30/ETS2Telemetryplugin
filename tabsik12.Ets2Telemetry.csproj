@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Nowa oficjalna referencja zamiast Macro Deck 2.dll -->
     <PackageReference Include="SuchByte.MacroDeck" Version="*" />
     <PackageReference Include="Newtonsoft.Json" Version="2.14.1" />
   </ItemGroup>
