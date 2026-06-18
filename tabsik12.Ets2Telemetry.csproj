@@ -5,7 +5,7 @@
     <RootNamespace>tabsik12.Ets2TelemetryPlugin</RootNamespace>
     <AssemblyName>Ets2TelemetryPlugin</AssemblyName>
     <UseWindowsForms>true</UseWindowsForms>
-    <Version>1.1.1</Version>
+    <Version>1.0.9</Version>
 </PropertyGroup>
 
   <ItemGroup>
