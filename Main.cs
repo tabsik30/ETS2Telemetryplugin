@@ -89,7 +89,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
             catch (Exception ex)
             {
-                MacroDeckLogger.Error(this, "Failed to save ETS2 telemetry config: {0}", ex.Message);
+                MacroDeckLogger.Error(this, $"Failed to save ETS2 telemetry config: {ex.Message}");
             }
         }
 
