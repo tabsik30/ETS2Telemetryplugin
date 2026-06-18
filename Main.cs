@@ -280,7 +280,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
             catch (Exception ex)
             {
-                MacroDeckLogger.Error(this, "ETS2 telemetry update error: {0}", ex.Message);
+                MacroDeckLogger.Error(this, "ETS2 telemetry update error: {ex.Message}");
             }
         }
     }
