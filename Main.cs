@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -129,11 +130,10 @@ namespace tabsik12.Ets2TelemetryPlugin
                 int speedLimitRounded = (int)Math.Round(speedLimitDisplay);
                 string speedLimitText = speedLimitRounded.ToString();
 
-                // 2a. Tempomat – stan i ustawiona prędkość (w tych samych jednostkach co prędkość) [web:135][web:87]
+                // 2a. Tempomat – stan i ustawiona prędkość (w tych samych jednostkach co prędkość)
                 bool cruiseOnRaw = truck?["cruiseControlOn"]?.ToObject<bool?>() ?? false;
                 double cruiseSpeedValKm = truck?["cruiseControlSpeed"]?.ToObject<double?>() ?? 0.0; // km/h z telemetrii
 
-                // Jeśli CC jest wyłączony lub wartość bez sensu, nie pokazujemy jej
                 if (!cruiseOnRaw || cruiseSpeedValKm <= 0.1)
                 {
                     cruiseSpeedValKm = 0.0;
@@ -156,7 +156,6 @@ namespace tabsik12.Ets2TelemetryPlugin
                     var rawFuel = truck["fuelPercentage"].ToObject<double?>();
                     if (rawFuel.HasValue)
                     {
-                        // w niektórych wersjach jest już 0–100, w innych 0–1
                         fuelPct = rawFuel.Value > 1.5 ? rawFuel.Value : rawFuel.Value * 100.0;
                     }
                 }
@@ -190,12 +189,11 @@ namespace tabsik12.Ets2TelemetryPlugin
                     gearText = gearRaw.ToString();
                 }
 
-                // 5. Światła (dane z Funbit: lightsParkingOn, lightsBeamLowOn, lightsBeamHighOn) [web:64][web:135]
+                // 5. Światła
                 bool parkingOn = truck?["lightsParkingOn"]?.ToObject<bool?>() ?? false;
                 bool lowOn     = truck?["lightsBeamLowOn"]?.ToObject<bool?>() ?? false;
                 bool highOn    = truck?["lightsBeamHighOn"]?.ToObject<bool?>() ?? false;
 
-                // Zbiorczy opis tekstowy (jak wcześniej)
                 string lightsText;
                 if (highOn)
                 {
@@ -214,7 +212,6 @@ namespace tabsik12.Ets2TelemetryPlugin
                     lightsText = "OFF";
                 }
 
-                // Osobne boole do kafelków:
                 bool lightsParkingVar = parkingOn;
                 bool lightsLowVar     = lowOn;
                 bool lightsHighVar    = highOn;
@@ -226,7 +223,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 string blinkerText;
                 if (blinkerLeftOn && blinkerRightOn)
                 {
-                    blinkerText = "HAZARD"; // awaryjne
+                    blinkerText = "HAZARD";
                 }
                 else if (blinkerLeftOn)
                 {
@@ -249,7 +246,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 bool parkBrakeOn = truck?["parkBrakeOn"]?.ToObject<bool?>() ?? false;
                 string parkBrakeText = parkBrakeOn ? "ON" : "OFF";
 
-                // Ustawianie zmiennych Macro Deck
+                // Zmienne Macro Deck
 
                 // Prędkość i limit
                 VariableManager.SetValue("ets2_speed", speedText, VariableType.String, this, null);
@@ -263,13 +260,13 @@ namespace tabsik12.Ets2TelemetryPlugin
                 VariableManager.SetValue("ets2_fuel_percentage", fuelText, VariableType.String, this, null);
                 VariableManager.SetValue("ets2_gear", gearText, VariableType.String, this, null);
 
-                // Światła: zbiorcza oraz trzy osobne
+                // Światła
                 VariableManager.SetValue("ets2_lights", lightsText, VariableType.String, this, null);
                 VariableManager.SetValue("ets2_lights_parking", lightsParkingVar, VariableType.Bool, this, null);
                 VariableManager.SetValue("ets2_lights_low",     lightsLowVar,     VariableType.Bool, this, null);
                 VariableManager.SetValue("ets2_lights_high",    lightsHighVar,    VariableType.Bool, this, null);
 
-                // Kierunkowskazy: zbiorcza + trzy osobne
+                // Kierunkowskazy
                 VariableManager.SetValue("ets2_blinker", blinkerText, VariableType.String, this, null);
                 VariableManager.SetValue("ets2_blinker_left",   blinkerLeftVar,   VariableType.Bool, this, null);
                 VariableManager.SetValue("ets2_blinker_right",  blinkerRightVar,  VariableType.Bool, this, null);
@@ -278,6 +275,16 @@ namespace tabsik12.Ets2TelemetryPlugin
                 // Hamulec ręczny
                 VariableManager.SetValue("ets2_park_brake", parkBrakeText, VariableType.String, this, null);
             }
+            catch (HttpRequestException ex) when (ex.InnerException is SocketException se && se.SocketErrorCode == SocketError.ConnectionRefused)
+            {
+                // Telemetry server nie działa – ignorujemy, żeby nie spamować błędami
+                // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
+            }
+            catch (SocketException se) when (se.SocketErrorCode == SocketError.ConnectionRefused)
+            {
+                // Gdyby wyjątkowo przyszedł bez HttpRequestException
+                // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
+            }
             catch (Exception ex)
             {
                 MacroDeckLogger.Error(this, $"ETS2 telemetry update error: {ex.Message}");
@@ -285,7 +292,6 @@ namespace tabsik12.Ets2TelemetryPlugin
         }
     }
 
-    // Prosta klasa na potrzeby JSON konfiguracji
     public class PluginConfig
     {
         public bool UseMph { get; set; }
