@@ -40,7 +40,9 @@ namespace tabsik12.Ets2TelemetryPlugin
                 new GearAction()
             };
 
-            _httpClient.Timeout = TimeSpan.FromSeconds(5);
+            // Bezpieczniejszy timeout – unikamy przypadkowych przerwań po 5 s
+            _httpClient.Timeout = TimeSpan.FromSeconds(15);
+
             _updateTimer = new Timer(async _ => await UpdateTelemetry(), null, 0, 200);
         }
 
@@ -277,12 +279,18 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
             catch (HttpRequestException ex) when (ex.InnerException is SocketException se && se.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                // Telemetry server nie działa – ignorujemy, żeby nie spamować błędami
+                // Telemetry server nie działa / nie nasłuchuje – ignorujemy, żeby nie spamować błędami
                 // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
+            }
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+            {
+                // Timeout HttpClienta – żądanie zostało anulowane, bo minął Timeout
+                // Nie traktujemy tego jako błąd pluginu.
+                // MacroDeckLogger.Trace(this, "ETS2 telemetry request timed out.");
             }
             catch (SocketException se) when (se.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                // Gdyby wyjątkowo przyszedł bez HttpRequestException
+                // Gdyby wyjątkowo przyszedł czysty SocketException
                 // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
             }
             catch (Exception ex)
@@ -292,6 +300,7 @@ namespace tabsik12.Ets2TelemetryPlugin
         }
     }
 
+    // Prosta klasa na potrzeby JSON konfiguracji
     public class PluginConfig
     {
         public bool UseMph { get; set; }
