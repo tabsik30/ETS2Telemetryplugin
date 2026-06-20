@@ -40,7 +40,7 @@ namespace tabsik12.Ets2TelemetryPlugin
                 new GearAction()
             };
 
-            // Bezpieczniejszy timeout – unikamy losowych przerwań po 5 s
+            // Timeout – jak coś się przywiesi, nie czekamy w nieskończoność
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
 
             _updateTimer = new Timer(async _ => await UpdateTelemetry(), null, 0, 200);
@@ -279,23 +279,28 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
             catch (HttpRequestException ex) when (ex.InnerException is SocketException se && se.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                // Telemetry server nie działa / nie nasłuchuje – ignorujemy, żeby nie spamować błędami.
+                // Telemetry server nie działa / nie nasłuchuje – ignorujemy.
                 // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
-                // HttpClient przerwał request, bo minął Timeout – traktujemy to jak normalną sytuację (serwer za wolny).
-                // Nie logujemy tego jako błąd.
-                // MacroDeckLogger.Trace(this, "ETS2 telemetry request timed out.");
+                // HttpClient przerwał request (timeout / wewnętrzne anulowanie).
+                // Traktujemy to jako normalną sytuację – NIC nie logujemy.
+                // MacroDeckLogger.Trace(this, "ETS2 telemetry request canceled or timed out.");
+            }
+            catch (OperationCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
+            {
+                // To samo co wyżej, ale dla OperationCanceledException.
+                // MacroDeckLogger.Trace(this, "ETS2 telemetry request operation canceled.");
             }
             catch (SocketException se) when (se.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                // Gdyby wyjątkowo przyszedł czysty SocketException
+                // Gdyby przyszedł czysty SocketException
                 // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
             }
             catch (Exception ex)
             {
-                // Tylko prawdziwe błędy (JSON, null, itp.) będą widoczne jako error
+                // Tylko prawdziwe błędy (JSON, null, itp.) jako error
                 MacroDeckLogger.Error(this, $"ETS2 telemetry update error: {ex.Message}");
             }
         }
