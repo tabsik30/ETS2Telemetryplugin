@@ -18,6 +18,7 @@ namespace tabsik12.Ets2TelemetryPlugin
         private static readonly string TelemetryUrl = "http://localhost:25555/api/ets2/telemetry";
         private readonly HttpClient _httpClient = new HttpClient();
         private Timer _updateTimer;
+        private bool _telemetryRunning = false;
 
         // Ścieżka do naszego własnego pliku konfiguracyjnego
         private string ConfigFilePath =>
@@ -37,13 +38,14 @@ namespace tabsik12.Ets2TelemetryPlugin
                 new SpeedAction(),
                 new SpeedLimitAction(),
                 new FuelAction(),
-                new GearAction()
+                new GearAction(),
+                new StartTelemetryAction(this),
+                new StopTelemetryAction(this),
             };
 
-            // Timeout – jak coś się przywiesi, nie czekamy w nieskończoność
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
 
-            _updateTimer = new Timer(async _ => await UpdateTelemetry(), null, 0, 200);
+            // NIE startujemy timera automatycznie – robimy to przyciskiem StartTelemetry
         }
 
         public override void OpenConfigurator()
@@ -96,8 +98,34 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
         }
 
+        public void StartTelemetry()
+        {
+            if (_telemetryRunning) return;
+
+            _updateTimer?.Dispose();
+            _updateTimer = new Timer(async _ => await UpdateTelemetry(), null, 0, 200);
+            _telemetryRunning = true;
+            MacroDeckLogger.Info(this, "ETS2 telemetry started.");
+        }
+
+        public void StopTelemetry()
+        {
+            if (!_telemetryRunning) return;
+
+            _updateTimer?.Dispose();
+            _updateTimer = null;
+            _telemetryRunning = false;
+            MacroDeckLogger.Info(this, "ETS2 telemetry stopped.");
+        }
+
         private async Task UpdateTelemetry()
         {
+            // Jeśli ktoś w międzyczasie wyłączył telemetrię – nie rób nic
+            if (!_telemetryRunning || _updateTimer == null)
+            {
+                return;
+            }
+
             try
             {
                 var response = await _httpClient.GetAsync(TelemetryUrl);
@@ -280,29 +308,64 @@ namespace tabsik12.Ets2TelemetryPlugin
             catch (HttpRequestException ex) when (ex.InnerException is SocketException se && se.SocketErrorCode == SocketError.ConnectionRefused)
             {
                 // Telemetry server nie działa / nie nasłuchuje – ignorujemy.
-                // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
-                // HttpClient przerwał request (timeout / wewnętrzne anulowanie).
-                // Traktujemy to jako normalną sytuację – NIC nie logujemy.
-                // MacroDeckLogger.Trace(this, "ETS2 telemetry request canceled or timed out.");
+                // Timeout / wewnętrzne anulowanie HttpClient – normalna sytuacja, ignorujemy.
             }
             catch (OperationCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested)
             {
-                // To samo co wyżej, ale dla OperationCanceledException.
-                // MacroDeckLogger.Trace(this, "ETS2 telemetry request operation canceled.");
+                // To samo co wyżej dla OperationCanceledException.
             }
             catch (SocketException se) when (se.SocketErrorCode == SocketError.ConnectionRefused)
             {
-                // Gdyby przyszedł czysty SocketException
-                // MacroDeckLogger.Trace(this, "ETS2 telemetry server not running (connection refused).");
+                // Czysty SocketException przy braku serwera – też ignorujemy.
             }
             catch (Exception ex)
             {
-                // Tylko prawdziwe błędy (JSON, null, itp.) jako error
+                // Tylko prawdziwe błędy (JSON, NRE itp.) jako error.
                 MacroDeckLogger.Error(this, $"ETS2 telemetry update error: {ex.Message}");
             }
+        }
+    }
+
+    // Akcja: start telemetry
+    public class StartTelemetryAction : PluginAction
+    {
+        private readonly Main _plugin;
+
+        public override string Name => "Start ETS2/ATS telemetry";
+        public override string Description => "Rozpoczyna odpytywanie ETS2/ATS Telemetry Servera.";
+        public override string IconGlyph => "61515"; // np. 'play' z FontAwesome
+
+        public StartTelemetryAction(Main plugin)
+        {
+            _plugin = plugin;
+        }
+
+        public override void Trigger(string clientId, ActionButton actionButton)
+        {
+            _plugin.StartTelemetry();
+        }
+    }
+
+    // Akcja: stop telemetry
+    public class StopTelemetryAction : PluginAction
+    {
+        private readonly Main _plugin;
+
+        public override string Name => "Stop ETS2/ATS telemetry";
+        public override string Description => "Zatrzymuje odpytywanie ETS2/ATS Telemetry Servera.";
+        public override string IconGlyph => "61516"; // np. 'stop' z FontAwesome
+
+        public StopTelemetryAction(Main plugin)
+        {
+            _plugin = plugin;
+        }
+
+        public override void Trigger(string clientId, ActionButton actionButton)
+        {
+            _plugin.StopTelemetry();
         }
     }
 
