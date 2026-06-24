@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SuchByte.MacroDeck.GUI;           // ActionButton
 using SuchByte.MacroDeck.Logging;
 using SuchByte.MacroDeck.Plugins;
 using SuchByte.MacroDeck.Variables;
@@ -342,7 +343,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             _plugin = plugin;
         }
 
-        public override void Trigger(string clientId, ActionEditorAction actionEditorAction)
+        public override void Trigger(string clientId, ActionButton actionButton)
         {
             _plugin.StartTelemetry();
         }
@@ -361,7 +362,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             _plugin = plugin;
         }
 
-        public override void Trigger(string clientId, ActionEditorAction actionEditorAction)
+        public override void Trigger(string clientId, ActionButton actionButton)
         {
             _plugin.StopTelemetry();
         }
