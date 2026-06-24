@@ -336,14 +336,13 @@ namespace tabsik12.Ets2TelemetryPlugin
 
         public override string Name => "Start ETS2/ATS telemetry";
         public override string Description => "Rozpoczyna odpytywanie ETS2/ATS Telemetry Servera.";
-        public override string IconGlyph => "61515"; // np. 'play' z FontAwesome
 
         public StartTelemetryAction(Main plugin)
         {
             _plugin = plugin;
         }
 
-        public override void Trigger(string clientId, ActionButton actionButton)
+        public override void Trigger(string clientId, ActionEditorAction actionEditorAction)
         {
             _plugin.StartTelemetry();
         }
@@ -356,14 +355,13 @@ namespace tabsik12.Ets2TelemetryPlugin
 
         public override string Name => "Stop ETS2/ATS telemetry";
         public override string Description => "Zatrzymuje odpytywanie ETS2/ATS Telemetry Servera.";
-        public override string IconGlyph => "61516"; // np. 'stop' z FontAwesome
 
         public StopTelemetryAction(Main plugin)
         {
             _plugin = plugin;
         }
 
-        public override void Trigger(string clientId, ActionButton actionButton)
+        public override void Trigger(string clientId, ActionEditorAction actionEditorAction)
         {
             _plugin.StopTelemetry();
         }
