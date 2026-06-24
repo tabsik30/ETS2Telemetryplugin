@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SuchByte.MacroDeck.GUI;           // ActionButton
 using SuchByte.MacroDeck.Logging;
 using SuchByte.MacroDeck.Plugins;
 using SuchByte.MacroDeck.Variables;
@@ -40,13 +39,13 @@ namespace tabsik12.Ets2TelemetryPlugin
                 new SpeedLimitAction(),
                 new FuelAction(),
                 new GearAction(),
-                new StartTelemetryAction(this),
-                new StopTelemetryAction(this),
+                new StartTelemetryAction(),
+                new StopTelemetryAction(),
             };
 
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
 
-            // NIE startujemy timera automatycznie – robimy to przyciskiem StartTelemetry
+            // Nie startujemy timera automatycznie – robisz to przyciskiem StartTelemetry
         }
 
         public override void OpenConfigurator()
@@ -99,6 +98,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
         }
 
+        // START / STOP telemetrii sterowane przyciskiem
         public void StartTelemetry()
         {
             if (_telemetryRunning) return;
@@ -121,7 +121,6 @@ namespace tabsik12.Ets2TelemetryPlugin
 
         private async Task UpdateTelemetry()
         {
-            // Jeśli ktoś w międzyczasie wyłączył telemetrię – nie rób nic
             if (!_telemetryRunning || _updateTimer == null)
             {
                 return;
@@ -327,44 +326,6 @@ namespace tabsik12.Ets2TelemetryPlugin
                 // Tylko prawdziwe błędy (JSON, NRE itp.) jako error.
                 MacroDeckLogger.Error(this, $"ETS2 telemetry update error: {ex.Message}");
             }
-        }
-    }
-
-    // Akcja: start telemetry
-    public class StartTelemetryAction : PluginAction
-    {
-        private readonly Main _plugin;
-
-        public override string Name => "Start ETS2/ATS telemetry";
-        public override string Description => "Rozpoczyna odpytywanie ETS2/ATS Telemetry Servera.";
-
-        public StartTelemetryAction(Main plugin)
-        {
-            _plugin = plugin;
-        }
-
-        public override void Trigger(string clientId, ActionButton actionButton)
-        {
-            _plugin.StartTelemetry();
-        }
-    }
-
-    // Akcja: stop telemetry
-    public class StopTelemetryAction : PluginAction
-    {
-        private readonly Main _plugin;
-
-        public override string Name => "Stop ETS2/ATS telemetry";
-        public override string Description => "Zatrzymuje odpytywanie ETS2/ATS Telemetry Servera.";
-
-        public StopTelemetryAction(Main plugin)
-        {
-            _plugin = plugin;
-        }
-
-        public override void Trigger(string clientId, ActionButton actionButton)
-        {
-            _plugin.StopTelemetry();
         }
     }
 
