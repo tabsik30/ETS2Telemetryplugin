@@ -31,6 +31,9 @@ namespace tabsik12.Ets2TelemetryPlugin
 
         public override void Enable()
         {
+            // rejestrujemy instancję, żeby akcje miały do niej dostęp
+            TelemetryPluginInstance.MainInstance = this;
+
             LoadConfiguration();
 
             Actions = new List<PluginAction>
@@ -45,7 +48,7 @@ namespace tabsik12.Ets2TelemetryPlugin
 
             _httpClient.Timeout = TimeSpan.FromSeconds(15);
 
-            // Nie startujemy timera automatycznie – robisz to przyciskiem StartTelemetry
+            // NIE startujemy timera automatycznie – robisz to przyciskiem StartTelemetry
         }
 
         public override void OpenConfigurator()
@@ -98,7 +101,7 @@ namespace tabsik12.Ets2TelemetryPlugin
             }
         }
 
-        // START / STOP telemetrii sterowane przyciskiem
+        // START / STOP telemetrii sterowane przyciskami
         public void StartTelemetry()
         {
             if (_telemetryRunning) return;
