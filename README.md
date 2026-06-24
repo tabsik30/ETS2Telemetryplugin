@@ -6,7 +6,7 @@ its plugin for Macro Deck 2 that shows your Truck Speed,actual speed limit, Fuel
 in configure you can change betwen KM/h and Mph 
 
 HOW TO CONFIGURE MY PLUGIN
-
+fro version 1.1.26 you need actin button to "Start" and "stop" connection with ETS2/ATS tlemetry server 
 1.install Macro Deck 2
 
 2.install my plugin Ets2Telemetry
