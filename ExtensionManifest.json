@@ -3,9 +3,9 @@
   "name": "ETS2 Telemetry",
   "author": "tabsik12",
   "packageId": "Ets2TelemetryPlugin",
-  "version": "1.1.26",
+  "version": "1.1.27",
   "target-plugin-api-version": 40,
-  "target-macro-deck-version" : "2.14.1",
+  "target-macro-deck-version" : "2.15.0",
   "repository" : "https://github.com/tabsik30/ETS2Telemetryplugin",
   "dll": "Ets2TelemetryPlugin.dll",
   "author-discord-userid": 900012635695747112
