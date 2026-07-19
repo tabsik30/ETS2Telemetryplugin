@@ -23,26 +23,19 @@ a list of labels and a description of what each label does
 |variable | descryption|
 |---------|------------|
 |{ets2_speed}|  it shows your actual speed you can add Km/h or Mph at end and "speedometer" under it to make soure what it shows |
-
 |{ets2_speed_limit}| it shows your actual speed limit as abowe you can add Km/h or MPh at end and "limit" |
-
-{ets2_cruise_on shows status of cruise controll
-{ets2_cruise_speed} shows speed set for cruise controll
-
-{ets2_gear} it shows your actual gear R N 1 2 3 etc  you can write "Gear" under it to now what it shows 
-
-{ets2_park_brake} it shows your parking brake status ON/OFF
-
-{ets2_lights} it shows lights status PARK LOW HIGH OFF or you can set them as 3 separate button
-{ets2_lights_high} for high ligits
-{ets2_lights_low}  for low loight
-{ets2_lights_parking} for parking lights
-
-
-{ets2_blinker} it shows blinkers status LEFT RIGHT HAZARD or you can set them as 3 separate button
-{ets2_blinker_left} for left blinker
-{ets2_blinker_right} for right blinker
-{ets2_blinker_hazard} for hazard lights 
+|{ets2_cruise_on}| shows status of cruise controll|
+|{ets2_cruise_speed}| shows speed set for cruise controll|
+|{ets2_gear}| it shows your actual gear R N 1 2 3 etc  you can write "Gear" under it to now what it shows| 
+|{ets2_park_brake}| it shows your parking brake status ON/OFF|
+|{ets2_lights}| it shows lights status PARK LOW HIGH OFF or you can set them as 3 separate button|
+|{ets2_lights_high}| for high ligits|
+|{ets2_lights_low}|  for low loight|
+|{ets2_lights_parking}| for parking lights|
+|{ets2_blinker}| it shows blinkers status LEFT RIGHT HAZARD or you can set them as 3 separate button|
+|{ets2_blinker_left}| for left blinker|
+|{ets2_blinker_right}| for right blinker|
+|{ets2_blinker_hazard}| for hazard lights|
  
 to to change the conversion between Km/h and Mph go to the plugin configuration
 
