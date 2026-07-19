@@ -17,8 +17,8 @@ fro version 1.1.26 you need actin button to "Start" and "stop" connection with E
 4.install ETS2/ATS telemertry server https://github.com/Funbit/ets2-telemetry-server
 
 Now let's create buttons
-all you need to do in macro deck is enter the appropriate line as button label "Label" 
-you can edit them as you wish instead of using labels you can use "on event" and then set some nice icons to show status 
+all you need to do in macro deck is create two buttons first ACTION -> ETS2 TELEMETRY -> START ETS2/ATS TELEMETRY this will start connection between plugin and ets2/ats telemetry server and second button ACTION -> ETS2 TELEMETRY -> STOP ETS2/ATS TELEMETRY to stop that cnnction otherwise the plugin will try to connect to server all the time, which will cause errors in MD2 then create buttons for indicators enter the appropriate line as button label "Label" 
+you can edit them as you wish for e.g instead of using labels you can use "on event" and then set some nice icons to show status 
 
 a list of labels and a description of what each label does
 |variable | descryption|
