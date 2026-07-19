@@ -18,9 +18,10 @@ fro version 1.1.26 you need actin button to "Start" and "stop" connection with E
 Now let's create buttons
 all you need to do in macro deck is enter the appropriate line as button label "Label" 
 you can edit them as you wish instead of using labels you can use "on event" and then set some nice icons to show status 
-............................................................
-|a list of labels and a description of what each label does|
-............................................................
+
+a list of labels and a description of what each label does
+|variable | descryption|
+|---------|------------|
 |{ets2_speed}|  it shows your actual speed you can add Km/h or Mph at end and "speedometer" under it to make soure what it shows |
 
 |{ets2_speed_limit}| it shows your actual speed limit as abowe you can add Km/h or MPh at end and "limit" |
