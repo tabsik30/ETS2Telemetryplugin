@@ -30,7 +30,7 @@ a list of labels and a description of what each label does
 |{ets2_park_brake}| it shows your parking brake status ON/OFF|
 |{ets2_lights}| it shows lights status PARK LOW HIGH OFF or you can set them as 3 separate button|
 |{ets2_lights_high}| for high ligits|
-|{ets2_lights_low}|  for low loight|
+|{ets2_lights_low}|  for low lights|
 |{ets2_lights_parking}| for parking lights|
 |{ets2_blinker}| it shows blinkers status LEFT RIGHT HAZARD or you can set them as 3 separate button|
 |{ets2_blinker_left}| for left blinker|
